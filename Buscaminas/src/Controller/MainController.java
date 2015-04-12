@@ -83,11 +83,18 @@ public class MainController extends MainWindow {
 		JOptionPane.showMessageDialog(this, "Ganaste");
 		buttonMatrix.setEnabled(false);
 	}
+	
 	private void gameFailed(){
 		JOptionPane.showMessageDialog(this, "Fallaste");
 		buttonMatrix.setEnabled(false);
 	}
 	
+	/**
+	 * Un hide all cell around <code>row</code>, <code>column</code>
+	 * recursively.
+	 * @param row
+	 * @param column
+	 */
 	private void unHidePosition(int row, int column){
 		if(field.getMines()[row][column] == MineField.EMPTY){
 			field.getMines()[row][column] += 10;
@@ -107,6 +114,10 @@ public class MainController extends MainWindow {
 		}
 	}
 	
+	/**
+	 * Check if the player have won the game.
+	 * @return true if player have won.
+	 */
 	private boolean checkForWinner(){
 		for (int i = 0; i < field.getMines().length; i++) {
 			for (int j = 0; j < field.getMines()[0].length; j++) {
@@ -125,6 +136,10 @@ public class MainController extends MainWindow {
 		return true;
 	}
 	
+	/**
+	 * Process the mouse left click
+	 * @param p MineField point
+	 */
 	private void processLeftClick(Point p) {
 		if(field.getMines()[p.x][p.y] == MineField.MINE)
 			gameFailed();
@@ -136,6 +151,9 @@ public class MainController extends MainWindow {
 		}
 	}
 
+	/**
+	 * Sync the view with the model
+	 */
 	private void syncModelView() {
 		byte[][] mines = field.getMines();
 		for (int i = 0; i < mines.length; i++) {
