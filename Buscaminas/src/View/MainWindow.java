@@ -18,7 +18,7 @@ public class MainWindow extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public MainWindow() {
+	public MainWindow(int rows, int columns) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -30,7 +30,7 @@ public class MainWindow extends JFrame {
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(lblNewLabel, BorderLayout.NORTH);
 		
-		buttonMatrix = new ButtonMatrix(10, 8);
+		buttonMatrix = new ButtonMatrix(rows, columns);
 		contentPane.add(buttonMatrix,BorderLayout.CENTER);
 	}
 
