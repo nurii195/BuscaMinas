@@ -4,6 +4,7 @@ import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Arrays;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -77,8 +78,20 @@ public class ButtonMatrix extends JPanel implements MouseListener {
 		return buttons[row][column];
 	}
 
+	/**
+	 * Get the JButton at <code>p</code>
+	 * @param p Point of matrix.
+	 * @return JButton at <code>p</code>
+	 * @throws IndexOutOfBoundsException if <code>p</code> is out of matrix;
+	 */
+	public JButton getButton(Point p) {
+		return buttons[p.x][p.y];
+	}
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		if(!this.isEnabled())
+			return;
 		MouseListener[] listeners = this.getListeners(MouseListener.class);
 		for (MouseListener actionListener : listeners)
 			actionListener.mouseClicked(e);
@@ -92,6 +105,8 @@ public class ButtonMatrix extends JPanel implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+		if(!this.isEnabled())
+			return;
 		MouseListener[] listeners = this.getListeners(MouseListener.class);
 		for (MouseListener actionListener : listeners)
 			actionListener.mousePressed(e);
@@ -99,8 +114,18 @@ public class ButtonMatrix extends JPanel implements MouseListener {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
+		if(!this.isEnabled())
+			return;
 		MouseListener[] listeners = this.getListeners(MouseListener.class);
 		for (MouseListener actionListener : listeners)
 			actionListener.mouseReleased(e);
+	}
+	
+	@Override
+	public void setEnabled(boolean enabled) {
+		super.setEnabled(enabled);
+		for (JButton[] jButtons : buttons) {
+			Arrays.asList(jButtons).stream().forEach( j -> j.setEnabled(enabled));
+		}
 	}
 }
