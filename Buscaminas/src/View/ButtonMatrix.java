@@ -1,5 +1,6 @@
 package View;
 
+import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,6 +34,7 @@ public class ButtonMatrix extends JPanel implements ActionListener{
 			throw new IllegalArgumentException(
 					"Number of rows and number of colums must be greater than zero");
 
+		this.setLayout(new GridLayout(rows, columns));
 		buttons = new JButton[rows][columns];
 		for (int i = 0; i < buttons.length; i++)
 		{
@@ -40,6 +42,7 @@ public class ButtonMatrix extends JPanel implements ActionListener{
 			{
 				buttons[i][j] = new JButton();
 				buttons[i][j].addActionListener(this);
+				this.add(buttons[i][j]);
 			}
 		}
 	}
@@ -79,22 +82,9 @@ public class ButtonMatrix extends JPanel implements ActionListener{
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		System.out.println(getIndexOf((JButton)e.getSource()));
 		ActionListener[] listeners = this.getListeners(ActionListener.class);
 		for (ActionListener actionListener : listeners)
 			actionListener.actionPerformed(e);
-	}
-	
-	@Override
-	public void setSize(int width, int height) {
-		super.setSize(width, height);
-		int buttonWidth = width / buttons[0].length;
-		int buttonHeight = height / buttons.length;
-		for (int i = 0; i < buttons.length; i++)
-		{
-			for (int j = 0; j < buttons[i].length; j++)
-			{
-				buttons[i][j].setSize(buttonWidth, buttonHeight);
-			}
-		}
-	}
+	}a
 }
