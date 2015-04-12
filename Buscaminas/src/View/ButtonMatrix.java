@@ -2,19 +2,19 @@ package View;
 
 import java.awt.GridLayout;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
 /**
  * 
- * @author Marco A. Fern·ndez
+ * @author Marco A. Fern√°ndez
  *
  */
 @SuppressWarnings("serial")
-public class ButtonMatrix extends JPanel implements ActionListener{
+public class ButtonMatrix extends JPanel implements MouseListener {
 
 	private final JButton[][] buttons;
 
@@ -41,7 +41,7 @@ public class ButtonMatrix extends JPanel implements ActionListener{
 			for (int j = 0; j < buttons[i].length; j++)
 			{
 				buttons[i][j] = new JButton();
-				buttons[i][j].addActionListener(this);
+				buttons[i][j].addMouseListener(this);
 				this.add(buttons[i][j]);
 			}
 		}
@@ -76,15 +76,31 @@ public class ButtonMatrix extends JPanel implements ActionListener{
 	public JButton getButton(int row, int column) {
 		return buttons[row][column];
 	}
-	
-	/**
-	 * Proxy all buttons events to external action listeners
-	 */
+
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		System.out.println(getIndexOf((JButton)e.getSource()));
-		ActionListener[] listeners = this.getListeners(ActionListener.class);
-		for (ActionListener actionListener : listeners)
-			actionListener.actionPerformed(e);
+	public void mouseClicked(MouseEvent e) {
+		MouseListener[] listeners = this.getListeners(MouseListener.class);
+		for (MouseListener actionListener : listeners)
+			actionListener.mouseClicked(e);
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+
+	@Override
+	public void mouseExited(MouseEvent e) {}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		MouseListener[] listeners = this.getListeners(MouseListener.class);
+		for (MouseListener actionListener : listeners)
+			actionListener.mousePressed(e);
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		MouseListener[] listeners = this.getListeners(MouseListener.class);
+		for (MouseListener actionListener : listeners)
+			actionListener.mouseReleased(e);
 	}
 }

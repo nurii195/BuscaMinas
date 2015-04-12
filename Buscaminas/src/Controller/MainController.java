@@ -4,6 +4,10 @@ package Controller;
 import java.awt.EventQueue;
 
 import View.MainWindow;
+import javax.swing.JButton;
+import java.awt.BorderLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 @SuppressWarnings("serial")
 public class MainController extends MainWindow {
