@@ -86,5 +86,5 @@ public class ButtonMatrix extends JPanel implements ActionListener{
 		ActionListener[] listeners = this.getListeners(ActionListener.class);
 		for (ActionListener actionListener : listeners)
 			actionListener.actionPerformed(e);
-	}a
+	}
 }
