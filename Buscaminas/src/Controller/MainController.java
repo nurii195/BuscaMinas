@@ -1,17 +1,26 @@
 package Controller;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Point;
 
 import Model.MineField;
+import View.ButtonMatrix;
 import View.MainWindow;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
 public class MainController extends MainWindow {
@@ -37,10 +46,17 @@ public class MainController extends MainWindow {
 	}
 
 	private final MouseListener listener;
-	private final MineField field;
+	private MineField field;
 
 	public MainController() {
 		super(10, 10);
+		mntmNuevoJuego.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				initGame();				
+			}
+
+		});
+		
 		listener = new MouseListener() {
 
 			@Override
@@ -71,9 +87,56 @@ public class MainController extends MainWindow {
 				syncModelView();
 			}
 		};
+		
+	}
 
+	protected void initGame() {
+		
+		boolean gotWidth = false;
+		int width = 0;
+		do
+		{	
+			try{
+				width = Integer.parseInt(JOptionPane.showInputDialog(this, "¿Ancho? Mínimo 2"));
+				if(width > 1)
+					gotWidth = true;
+			}
+			catch (Exception e){}
+		}
+		while (!gotWidth);	
+		
+		boolean gotHeigth = false;
+		int heigth = 0;
+		do
+		{	
+			try{
+				heigth = Integer.parseInt(JOptionPane.showInputDialog(this, "¿Alto? Mínimo 2"));
+				if(width > 1)
+					gotHeigth = true;
+			}
+			catch (Exception e){}
+		}
+		while (!gotHeigth);	
+		
+		boolean gotMines = false;
+		int mines = 0;
+		do
+		{	
+			try{
+				mines = Integer.parseInt(JOptionPane.showInputDialog(this, "¿Minas? Máximo "+((width * heigth)-1)));
+				if(mines < width * heigth && mines > 0)
+					gotMines = true;
+			}
+			catch (Exception e){}
+		}
+		while (!gotMines);	
+		
+		this.remove(buttonMatrix);
+		buttonMatrix = new ButtonMatrix(heigth, width);
 		this.buttonMatrix.addMouseListener(listener);
-		field = new MineField(10, 10, 7);
+		this.add(buttonMatrix, BorderLayout.CENTER);
+		field = new MineField(heigth, width,mines);
+		this.setSize(this.getWidth() + 1, this.getHeight() + 1);
 	}
 
 	private void gameWon(){
@@ -82,10 +145,25 @@ public class MainController extends MainWindow {
 	}
 	
 	private void gameFailed(){
+		showMines();
 		JOptionPane.showMessageDialog(this, "Fallaste");
 		buttonMatrix.setEnabled(false);
 	}
 	
+	private void showMines() {
+		for (int i = 0; i < field.getMines().length; i++)
+		{
+			for (int j = 0; j < field.getMines()[0].length; j++)
+			{
+				if(field.getMines()[i][j] == MineField.MINE)
+				{
+					buttonMatrix.getButton(i, j).setText("X");
+				}
+			}
+		}
+		
+	}
+
 	/**
 	 * Un hide all cell around <code>row</code>, <code>column</code>
 	 * recursively.
@@ -138,8 +216,10 @@ public class MainController extends MainWindow {
 	 * @param p MineField point
 	 */
 	private void processLeftClick(Point p) {
-		if(field.getMines()[p.x][p.y] == MineField.MINE)
+		if(field.getMines()[p.x][p.y] == MineField.MINE){
+			buttonMatrix.getButton(p).setText("X");
 			gameFailed();
+		}
 		else{
 			unHidePosition(p.x, p.y);
 			if (checkForWinner()) {
@@ -156,14 +236,29 @@ public class MainController extends MainWindow {
 		for (int i = 0; i < mines.length; i++) {
 			for (int j = 0; j < mines[i].length; j++) {
 				if (mines[i][j] == 10) {
-					buttonMatrix.getButton(i, j).setVisible(false);
+					flatButton(buttonMatrix.getButton(i, j));
+
 				} else if (mines[i][j] > 10) {
 					JButton button = buttonMatrix.getButton(i, j);
-					if(button.getText() != "?")
+					if(button.getText() != "?"){
 						button.setText(String.valueOf(mines[i][j] - 10));
+						switch (mines[i][j] - 10) {
+						case 1:
+							button.setForeground(Color.BLUE);
+							break;
+						//TODO other colors
+						}
+						flatButton(button);
+					}
 				}
 			}
 		}
 	}
 
+	private void flatButton(JButton button){
+		button.setFocusPainted(false);
+		button.setOpaque(false);
+		button.setContentAreaFilled(false);
+		button.setBorder(new LineBorder(Color.GRAY));
+	}
 }
