@@ -47,6 +47,7 @@ public class MainController extends MainWindow {
 
 	private final MouseListener listener;
 	private MineField field;
+	private boolean leftButtonPressed = false , rigthButtonPressed = false, cancelClick = false;
 
 	public MainController() {
 		super(10, 10);
@@ -61,10 +62,20 @@ public class MainController extends MainWindow {
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
+				if(cancelClick){
+					leftButtonPressed = false;
+					rigthButtonPressed = false;
+				}
 			}
 
 			@Override
 			public void mousePressed(MouseEvent e) {
+				if (e.getButton() == MouseEvent.BUTTON1)
+					leftButtonPressed = true;
+				else if (e.getButton() == MouseEvent.BUTTON3){
+					rigthButtonPressed = true;				
+				}
+				cancelClick = leftButtonPressed && rigthButtonPressed;
 			}
 
 			@Override
@@ -77,7 +88,13 @@ public class MainController extends MainWindow {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (e.getButton() == MouseEvent.BUTTON1)
+				System.out.println("clicked");
+				if(cancelClick)
+				{
+					processBothButtons(buttonMatrix.getIndexOf((JButton) e
+							.getSource()));
+				}
+				else if (e.getButton() == MouseEvent.BUTTON1)
 					processLeftClick(buttonMatrix.getIndexOf((JButton) e
 							.getSource()));
 				else if (e.getButton() == MouseEvent.BUTTON3){
@@ -85,7 +102,7 @@ public class MainController extends MainWindow {
 					b.setText(b.getText() == "" ? "?" : "");					
 				}
 				syncModelView();
-			}
+			}			
 		};
 		
 	}
@@ -228,6 +245,45 @@ public class MainController extends MainWindow {
 		}
 	}
 
+	private int getCollingMarks(Point p){
+		int count = 0;
+		byte[][] mines = field.getMines();
+		for (int i = p.y - 1; i <= p.y+1; i++)
+		{
+			for (int j = p.x - 1; j <= p.x + 1; j++)
+			{
+				if(i>= 0 && i < mines.length && j >= 0 && j < mines[0].length){
+					if(i != p.y || j != p.x){
+						if(buttonMatrix.getButton(i, j).getText() == "?"){
+									count++;
+						}
+					}
+				}
+			}
+		}
+		return count;
+	}
+	
+	private void processBothButtons(Point p) {
+		if (Integer.valueOf(buttonMatrix.getButton(p).getText()).intValue() == getCollingMarks(p)){
+			System.out.println("Procesando doble click");
+			byte[][] mines = field.getMines();
+			for (int i = p.y - 1; i <= p.y+1; i++)
+			{
+				for (int j = p.x - 1; j <= p.x + 1; j++)
+				{
+					if(i>= 0 && i < mines.length && j >= 0 && j < mines[0].length){
+						if(i != p.y || j != p.x){
+							if(buttonMatrix.getButton(i, j).getText() != "?"){
+								processLeftClick(new Point(i,j));
+							}
+						}
+					}
+				}
+			}
+		}		
+	}
+	
 	/**
 	 * Sync the view with the model
 	 */
