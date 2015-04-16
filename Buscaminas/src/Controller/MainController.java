@@ -88,9 +88,10 @@ public class MainController extends MainWindow {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.out.println("clicked");
+				
 				if(cancelClick)
 				{
+					System.out.println("cancelClicked");
 					processBothButtons(buttonMatrix.getIndexOf((JButton) e
 							.getSource()));
 				}
@@ -248,19 +249,20 @@ public class MainController extends MainWindow {
 	private int getCollingMarks(Point p){
 		int count = 0;
 		byte[][] mines = field.getMines();
-		for (int i = p.y - 1; i <= p.y+1; i++)
+		for (int i = p.x - 1; i <= p.x+1; i++)
 		{
-			for (int j = p.x - 1; j <= p.x + 1; j++)
+			for (int j = p.y - 1; j <= p.y + 1; j++)
 			{
 				if(i>= 0 && i < mines.length && j >= 0 && j < mines[0].length){
-					if(i != p.y || j != p.x){
+					//if(i != p.y || j != p.x){
 						if(buttonMatrix.getButton(i, j).getText() == "?"){
 									count++;
 						}
-					}
+					//}
 				}
 			}
 		}
+		System.out.println("Marks "+count);
 		return count;
 	}
 	
@@ -268,12 +270,12 @@ public class MainController extends MainWindow {
 		if (Integer.valueOf(buttonMatrix.getButton(p).getText()).intValue() == getCollingMarks(p)){
 			System.out.println("Procesando doble click");
 			byte[][] mines = field.getMines();
-			for (int i = p.y - 1; i <= p.y+1; i++)
+			for (int i = p.x - 1; i <= p.x+1; i++)
 			{
-				for (int j = p.x - 1; j <= p.x + 1; j++)
+				for (int j = p.y - 1; j <= p.y + 1; j++)
 				{
 					if(i>= 0 && i < mines.length && j >= 0 && j < mines[0].length){
-						if(i != p.y || j != p.x){
+						if(i != p.x || j != p.y){
 							if(buttonMatrix.getButton(i, j).getText() != "?"){
 								processLeftClick(new Point(i,j));
 							}
