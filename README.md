@@ -1,2 +1,2 @@
 # BuscaMinas
-BuscaMinas Swing
+BuscaMinas Java-Swing
