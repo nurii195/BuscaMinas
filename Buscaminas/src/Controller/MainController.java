@@ -50,7 +50,7 @@ public class MainController extends MainWindow {
 	private boolean leftButtonPressed = false , rigthButtonPressed = false, cancelClick = false;
 
 	public MainController() {
-		super(10, 10);
+		super(12, 12);
 		mntmNuevoJuego.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				initGame();				
