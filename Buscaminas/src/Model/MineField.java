@@ -1,5 +1,5 @@
 package Model;
-
+/* Campo de minas */
 public class MineField {
 	public static final byte MINE = 9;
 	public static final byte EMPTY = 0;
